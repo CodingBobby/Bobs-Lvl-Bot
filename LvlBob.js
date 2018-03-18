@@ -2,8 +2,8 @@
                     _________________________
                    |---|--- Bob's Bot ---|---|
                     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-                          VERSION 0.0.2
-                             180318
+                          VERSION 0.0.3
+                             180319
 
 >> Project started in 2k17 by Bob Walter with the distag Bob™#0001. <<
      >> All information took from the official documentation. <<
@@ -66,15 +66,30 @@ function loginLog(error, token) {                                             //
     console.log(`\n>\n> Logged in. Token: ${config.general.token}`);
 }
 
-function user() {                                                             // Users profile
+function level(msg) {                                                         // Users profile
 
   // Sets profile if not set already
-  if(!profiles[msg.author.id])                  // sent messages, times mentioned, reps, points, level, credits
-    profiles[msg.author.id] = {msg: 0, tag: 0, rep: 0, pts: 0, lvl: 0, crd: 0}; return;
-
-  else {
-
+  if(!profiles[msg.author.id]) {                // sent messages, times mentioned, reps, points, level, credits
+    profiles[msg.author.id] = {msg: 0, avg: 0, tag: 0, rep: 0, pts: 0, lvl: 0, rnk: 0, crd: 0, gld: {}};
   }
+  let usrData = profiles[msg.author];           // Shorter var for author ID
+
+  if(!usrData.gld[msg.guild]){
+    usrData.gld[msg.guild] = {msg: 0, tag: 0, rep: 0, pts: 0, lvl: 0, rnk: 0, crd: 0};
+  }
+  let gldData = usrData.gld[msg.guild];
+
+  usrData.msg++;                                // Message counter
+  gldData.msg++;
+
+  usrData.avg = Math.floor(((usrData.avg*usrData.msg)+msg.content.length)/(usrData.msg + 1));
+
+  let pts = msg.content.length;                 // Calculates gained points
+  pts = Math.floor(Math.sqrt(pts/2)*Math.sqrt(Math.log(pts/2))*pts);
+  if(!pts) pts = 0.5;
+
+  usrData.pts += pts;                           // Adds points
+  gldData.pts += pts;
 
   // Saves changes
   fs.writeFile("./profiles.json", JSON.stringify(profiles), (err) => {
@@ -86,7 +101,7 @@ function user() {                                                             //
 // ——— Message actions ————————————————————————————————————————————————————————— //
 
 // Logbook actions
-disbot.on("message", msg => {
+disbot.on("message", msg => {                   // Not stable yet
   const guildTag = msg.channel.type === 'text' ? `[${msg.guild.name}]` : '[DM]';
   const channelTag = msg.channel.type === 'text' ? `[#${msg.channel.name}]` : '';
 
@@ -105,7 +120,7 @@ disbot.on("message", msg => {
 
 // Level actions
 disbot.on("message", msg => {
-  if(servers.blacklist.indexOf(msg.channel.id) || message.author.bot || msg.channel.type === "dm")
+  if(message.author.bot || msg.channel.type === "dm")
     return;                                                                   // Prevents acting on log, bots or dms
 
   var message = {                                                             // Creates array from message details
@@ -113,10 +128,11 @@ disbot.on("message", msg => {
     author: msg.author.id,
     time: msg.createdTimestamp,
     channel: msg.channel.id,
+    guild: msg.guild.id,
     content: msg.content
   };
 
-  user(message);                                                              // Calls user function and imports message details
+  level(message);                                                             // Calls user function and imports message details
 
 });
 
