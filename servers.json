@@ -1,0 +1,9 @@
+{
+  "log": "CHANNEL ID HERE",
+  "whitelist": [
+    "CHANNEL ID HERE"
+  ],
+  "blacklist": [
+    "CHANNEL ID HERE"
+  ]
+}
