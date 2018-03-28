@@ -23,7 +23,7 @@ const Discord = require("discord.js");                                        //
 const config = require("./config.json");                                      // Imports configuration file
 const servers = require("./servers.json");                                    // Server settings
 const owner = require("./owner.json");                                        // Owner settings
-require("./commands.js")();                                                   // Commands
+require("./Commands.js")();                                                   // Commands
 
 
 // ——— Login actions ——————————————————————————————————————————————————————————— //
