@@ -25,7 +25,6 @@ module.exports = function() {
       return 1;
     }
 
-
     return;
   };
 
@@ -92,8 +91,8 @@ function gidArrSrch(msg, search) {  // fetch profiles of all users in current gu
 function sortArr(arr, s) {          // sort arr[][] for s. element
   let swapp;
   let n = arr.length - 1;
-  s -= 1;          // element to sort for
-  do {             // bubble sort
+  s -= 1;
+  do {
     swapp = false;
     for(var i = 0; i < n; i++) {
       if(arr[i][s] < arr[i+1][s]) {
@@ -103,7 +102,7 @@ function sortArr(arr, s) {          // sort arr[][] for s. element
         swapp = true;
       }
     } n--;
-  } while (swapp); // stops when everything is sorted
+  } while (swapp);
   return arr;
 }
 
