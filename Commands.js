@@ -63,6 +63,24 @@ module.exports = function() {
 
       return 1;
     }
+    
+    if(cmd == 'timedifference' || cmd == 'td' || cmd == 'timediff') {
+      cmdLog(cmd,args,msg);
+      
+      let betweenie = getTimeDiff(args[0],args[1]);
+      let m = "";
+      for(var key in betweenie) {
+        if(betweenie.hasOwnProperty(key)) {
+          m += `**${betweenie[key]}** ${key}`;
+          if(key != "secs")
+            m += ' - '
+        }
+      }
+      msg.channel.send(m);
+      
+      return 1;
+    }
+
 
     return;
   };
@@ -104,6 +122,29 @@ function sortArr(arr, s) {          // sort arr[][] for s. element
     } n--;
   } while (swapp);
   return arr;
+}
+
+function toInt(number) {            // Parses given number to integer
+  return parseInt(
+    Number(number)
+  );
+}
+
+function getTime(time) {            // Gives back time (m-w-d-h-m-s) from milliseconds
+  return {
+    "months": toInt(time / 241920000),
+    "weeks": toInt(time / 604800000) % 4,
+    "days": toInt(time / 86400000) % 7,
+    "hours": toInt(time / 3600000) % 24,
+    "mins": toInt(time / 60000) % 60,
+    "secs": toInt(time / 1000) % 60
+  };
+}
+
+function getTimeDiff(a,b) {         // Gives back time difference
+  let c = Math.abs((a)-(b));
+  c = getTime(c);
+  return c;
 }
 
 function cmdLog(cmd, args, msg) {   // general command log in console
